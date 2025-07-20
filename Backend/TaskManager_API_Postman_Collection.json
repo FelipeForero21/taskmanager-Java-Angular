@@ -1,0 +1,1208 @@
+{
+	"info": {
+		"_postman_id": "71f51bcd-c994-4453-a700-0f6a05493780",
+		"name": "Task Manager API - TCC",
+		"description": "Colección completa de endpoints para el sistema de gestión de tareas con IA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33509084"
+	},
+	"item": [
+		{
+			"name": "Autenticación",
+			"item": [
+				{
+					"name": "Registrar Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"usuario@prueba.com\",\n  \"password\": \"Password123!\",\n  \"firstName\": \"Usuario\",\n  \"lastName\": \"Prueba\"\n}"
+						},
+						"url": "{{baseUrl}}/api/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Iniciar Sesión",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"usuario@prueba.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": "{{baseUrl}}/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Validar Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/auth/validate"
+					},
+					"response": []
+				},
+				{
+					"name": "Cerrar Sesión",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/auth/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Perfil",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/profile?firstName=Nuevo&lastName=Apellido&phoneNumber=+573009876543",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "firstName",
+									"value": "Nuevo"
+								},
+								{
+									"key": "lastName",
+									"value": "Apellido"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "+573009876543"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tareas",
+			"item": [
+				{
+					"name": "Crear Tarea",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHBydWViYS5jb20iLCJpYXQiOjE3NTI5ODU0NTUsImV4cCI6MTc1MzA3MTg1NX0.P8_IzSJ83qMI459y74lzxBw3_txbn6WwTWKQoBUzFrQ"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Implementar autenticación JWT\",\n    \"description\": \"Crear sistema de autenticación con JWT para el proyecto\",\n    \"dueDate\": \"2024-12-31T23:59:59\",\n    \"priorityId\": 2,\n    \"statusId\": 1,\n    \"categoryId\": 1,\n    \"assignedTo\": null\n}"
+						},
+						"url": "{{baseUrl}}/api/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Tareas (Paginado)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks?page=0&size=10&sortBy=createdAt&sortDir=desc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Tarea por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/tasks/{{taskId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Tarea",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Implementar autenticación JWT - Actualizado\",\n    \"description\": \"Crear sistema de autenticación con JWT para el proyecto - Completado\",\n    \"dueDate\": \"2024-12-31T23:59:59\",\n    \"priorityId\": 1,\n    \"statusId\": 2,\n    \"categoryId\": 1,\n    \"assignedTo\": null\n}"
+						},
+						"url": "{{baseUrl}}/api/tasks/{{taskId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Tarea",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/tasks/{{taskId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Tareas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/search?searchTerm=JWT&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "JWT"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar por Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/filter/status/Pendiente?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"filter",
+								"status",
+								"Pendiente"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar por Prioridad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/filter/priority/Alta?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"filter",
+								"priority",
+								"Alta"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar por Categoría",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/filter/category/1?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"filter",
+								"category",
+								"1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar por Rango de Fechas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/filter/date-range?startDate=2024-01-01T00:00:00&endDate=2024-12-31T23:59:59",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"filter",
+								"date-range"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01T00:00:00"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31T23:59:59"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtro Múltiple",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/filter/multiple?statusId=1&priorityId=2&categoryId=1&searchTerm=JWT&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"filter",
+								"multiple"
+							],
+							"query": [
+								{
+									"key": "statusId",
+									"value": "1"
+								},
+								{
+									"key": "priorityId",
+									"value": "2"
+								},
+								{
+									"key": "categoryId",
+									"value": "1"
+								},
+								{
+									"key": "searchTerm",
+									"value": "JWT"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tareas Próximas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/tasks/upcoming"
+					},
+					"response": []
+				},
+				{
+					"name": "Tareas Vencidas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/tasks/overdue"
+					},
+					"response": []
+				},
+				{
+					"name": "Tareas Recientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tasks/recent?limit=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"recent"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Datos Completos del Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard"
+					},
+					"response": []
+				},
+				{
+					"name": "Métricas de Productividad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/productivity"
+					},
+					"response": []
+				},
+				{
+					"name": "Progreso Semanal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/weekly-progress"
+					},
+					"response": []
+				},
+				{
+					"name": "Análisis por Categorías",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/category-analytics"
+					},
+					"response": []
+				},
+				{
+					"name": "Resumen de Estadísticas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/stats/summary"
+					},
+					"response": []
+				},
+				{
+					"name": "Distribución por Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/stats/status-distribution"
+					},
+					"response": []
+				},
+				{
+					"name": "Distribución por Prioridad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/stats/priority-distribution"
+					},
+					"response": []
+				},
+				{
+					"name": "Tareas Recientes del Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/tasks/recent"
+					},
+					"response": []
+				},
+				{
+					"name": "Tareas Próximas del Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/tasks/upcoming"
+					},
+					"response": []
+				},
+				{
+					"name": "Tendencias de Rendimiento",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/dashboard/performance/trends"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categorías",
+			"item": [
+				{
+					"name": "Crear Categoría",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHBydWViYS5jb20iLCJpYXQiOjE3NTI5ODU0NTUsImV4cCI6MTc1MzA3MTg1NX0.P8_IzSJ83qMI459y74lzxBw3_txbn6WwTWKQoBUzFrQ"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories?categoryName=Desarrollo&description=Categoría para tareas de desarrollo&colorHex=%2323007bff&iconName=code",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "categoryName",
+									"value": "Desarrollo"
+								},
+								{
+									"key": "description",
+									"value": "Categoría para tareas de desarrollo"
+								},
+								{
+									"key": "colorHex",
+									"value": "#23007bff"
+								},
+								{
+									"key": "iconName",
+									"value": "code"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Categorías del Usuario",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Categoría por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Categoría",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/1?categoryName=Desarrollo Web&description=Categoría para desarrollo web&colorHex=%2328a745&iconName=globe",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1"
+							],
+							"query": [
+								{
+									"key": "categoryName",
+									"value": "Desarrollo Web"
+								},
+								{
+									"key": "description",
+									"value": "Categoría para desarrollo web"
+								},
+								{
+									"key": "colorHex",
+									"value": "#28a745"
+								},
+								{
+									"key": "iconName",
+									"value": "globe"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Categoría",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Categorías",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/search?searchTerm=Desarrollo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "Desarrollo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Categoría por Nombre",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/name/Desarrollo"
+					},
+					"response": []
+				},
+				{
+					"name": "Categorías con Conteo de Tareas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/analytics/with-task-count"
+					},
+					"response": []
+				},
+				{
+					"name": "Categorías Más Usadas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/analytics/most-used"
+					},
+					"response": []
+				},
+				{
+					"name": "Estadísticas de Categorías",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/analytics/statistics"
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Existencia de Categoría",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/exists/Desarrollo"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Categorías por Defecto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/categories/default"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Datos Maestros",
+			"item": [
+				{
+					"name": "Obtener Todos los Datos Maestros",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/all"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Estados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/statuses"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Prioridades",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/priorities"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Estado por Nombre",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/statuses/Pendiente"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Estado por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/statuses/id/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Prioridad por Nombre",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/priorities/Alta"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Prioridad por Nivel",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/priorities/level/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Prioridad por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/priorities/id/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Existencia de Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/statuses/exists/Pendiente"
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Existencia de Prioridad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/priorities/exists/Alta"
+					},
+					"response": []
+				},
+				{
+					"name": "Resumen de Estados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/statuses/summary"
+					},
+					"response": []
+				},
+				{
+					"name": "Resumen de Prioridades",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/priorities/summary"
+					},
+					"response": []
+				},
+				{
+					"name": "Validar Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/validation/status/Pendiente"
+					},
+					"response": []
+				},
+				{
+					"name": "Validar Prioridad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": "{{baseUrl}}/api/master-data/validation/priority/Alta"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Documentación",
+			"item": [
+				{
+					"name": "Swagger UI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/swagger-ui/index.html"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenAPI JSON",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/v3/api-docs"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenAPI YAML",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/v3/api-docs.yaml"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Script para extraer automáticamente el token JWT después del login",
+					"if (pm.response.code === 200) {",
+					"    const responseJson = pm.response.json();",
+					"    if (responseJson.token) {",
+					"        pm.environment.set('jwtToken', responseJson.token);",
+					"        console.log('Token JWT guardado automáticamente');",
+					"    }",
+					"    if (responseJson.id) {",
+					"        pm.environment.set('taskId', responseJson.id);",
+					"        console.log('ID de tarea guardado automáticamente');",
+					"    }",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwtToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "taskId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
