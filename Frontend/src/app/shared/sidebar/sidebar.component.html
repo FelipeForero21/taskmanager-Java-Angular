@@ -1,0 +1,64 @@
+<mat-sidenav-container class="sidebar-container">
+  <mat-sidenav #sidenav [mode]="'side'" [opened]="opened" class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <mat-icon class="logo-icon">task_alt</mat-icon>
+        <span class="logo-text">Task Manager</span>
+      </div>
+    </div>
+
+    <mat-nav-list class="sidebar-nav">
+      <ng-container *ngFor="let item of menuItems">
+        <a *ngIf="!item.children" 
+           mat-list-item 
+           [routerLink]="item.route" 
+           routerLinkActive="active"
+           class="nav-item">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.title }}</span>
+          <span *ngIf="item.badge" matListItemMeta class="badge">{{ item.badge }}</span>
+        </a>
+
+        <mat-expansion-panel *ngIf="item.children" 
+                            class="nav-expansion-panel"
+                            [expanded]="isActive(item.route)">
+          <mat-expansion-panel-header class="nav-expansion-header">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.title }}</span>
+            <span *ngIf="item.badge" matListItemMeta class="badge">{{ item.badge }}</span>
+          </mat-expansion-panel-header>
+
+          <mat-nav-list class="sub-nav-list">
+            <a *ngFor="let child of item.children"
+               mat-list-item 
+               [routerLink]="child.route" 
+               routerLinkActive="active"
+               class="sub-nav-item">
+              <mat-icon matListItemIcon>{{ child.icon }}</mat-icon>
+              <span matListItemTitle>{{ child.title }}</span>
+            </a>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+
+    <div class="sidebar-footer">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/help" class="nav-item">
+          <mat-icon matListItemIcon>help</mat-icon>
+          <span matListItemTitle>Ayuda</span>
+        </a>
+        <a mat-list-item routerLink="/about" class="nav-item">
+          <mat-icon matListItemIcon>info</mat-icon>
+          <span matListItemTitle>Acerca de</span>
+        </a>
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidebar-content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

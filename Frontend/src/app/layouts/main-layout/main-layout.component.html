@@ -1,0 +1,11 @@
+<div class="main-layout">
+  <app-header (sidebarToggle)="onSidebarToggle()"></app-header>
+  
+  <div class="layout-content">
+    <app-sidebar [opened]="sidebarOpened()"></app-sidebar>
+    
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

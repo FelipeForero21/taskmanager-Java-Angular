@@ -1,0 +1,362 @@
+.header-toolbar {
+  background: var(--tcc-gradient);
+  color: var(--tcc-white);
+  box-shadow: var(--tcc-shadow);
+  padding: 0 24px;
+  height: 70px;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  z-index: 1000;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+    height: 60px;
+  }
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+
+  .sidebar-toggle {
+    color: var(--tcc-white);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .app-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    max-width: 60%;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    .app-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: var(--tcc-yellow);
+      filter: drop-shadow(0 2px 4px rgba(241, 196, 15, 0.3));
+      flex-shrink: 0;
+    }
+
+    .app-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--tcc-white);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media (max-width: 1200px) {
+        font-size: 16px;
+      }
+
+      @media (max-width: 992px) {
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 12px;
+        max-width: 200px;
+      }
+
+      @media (max-width: 480px) {
+        display: none;
+      }
+    }
+  }
+}
+
+.toolbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .notification-btn {
+    color: var(--tcc-white);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    ::ng-deep .mat-mdc-badge-content {
+      background: var(--tcc-yellow);
+      color: var(--tcc-black);
+      font-size: 10px;
+      font-weight: 600;
+    }
+  }
+
+  .user-menu-btn {
+    color: var(--tcc-white);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .user-avatar {
+        mat-icon {
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
+          color: var(--tcc-white);
+        }
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1.2;
+
+        .user-name {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--tcc-white);
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+          @media (max-width: 768px) {
+            display: none;
+          }
+        }
+
+        .user-email {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.8);
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+          @media (max-width: 768px) {
+            display: none;
+          }
+        }
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        transition: transform 0.3s ease;
+      }
+    }
+
+    &:hover .user-info mat-icon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// Estilos para el menú de usuario
+::ng-deep .user-menu {
+  .mat-mdc-menu-panel {
+    border-radius: 12px;
+    box-shadow: var(--tcc-shadow);
+    border: 1px solid rgba(231, 76, 60, 0.1);
+    overflow: hidden;
+  }
+
+  .menu-header {
+    padding: 20px;
+    background: var(--tcc-gradient);
+    color: var(--tcc-white);
+
+    .menu-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .menu-avatar {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        color: var(--tcc-white);
+      }
+
+      .menu-user-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .menu-user-name {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--tcc-white);
+        }
+
+        .menu-user-email {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+    }
+  }
+
+  .mat-mdc-menu-item {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000 !important;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--tcc-red) !important;
+    }
+
+    mat-icon {
+      color: #666666 !important;
+      margin-right: 12px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover mat-icon {
+      color: var(--tcc-red) !important;
+    }
+
+    span {
+      color: #000000 !important;
+      font-weight: 500;
+    }
+
+    &:hover span {
+      color: var(--tcc-red) !important;
+    }
+  }
+
+  .mat-mdc-divider {
+    margin: 8px 0;
+    border-color: rgba(231, 76, 60, 0.1);
+  }
+}
+
+// Animaciones
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-toolbar {
+  animation: slideInDown 0.3s ease-out;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .toolbar-left {
+    gap: 12px;
+
+    .app-title {
+      max-width: 50%;
+    }
+  }
+
+  .toolbar-right {
+    gap: 8px;
+
+    .user-menu-btn {
+      padding: 6px 12px;
+
+      .user-info {
+        gap: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header-toolbar {
+    padding: 0 12px;
+  }
+
+  .toolbar-left {
+    gap: 8px;
+
+    .app-title {
+      max-width: 40%;
+    }
+  }
+
+  .toolbar-right {
+    gap: 4px;
+  }
+}

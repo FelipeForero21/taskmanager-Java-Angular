@@ -1,0 +1,220 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --tcc-red: #e74c3c;
+  --tcc-yellow: #f1c40f;
+  --tcc-white: #ffffff;
+  --tcc-black: #2c3e50;
+  --tcc-gray: #95a5a6;
+  --tcc-light-gray: #ecf0f1;
+  --tcc-dark-red: #c0392b;
+  --tcc-dark-yellow: #f39c12;
+  
+  --tcc-gradient: linear-gradient(135deg, var(--tcc-red) 0%, var(--tcc-dark-red) 100%);
+  --tcc-gradient-yellow: linear-gradient(135deg, var(--tcc-yellow) 0%, var(--tcc-dark-yellow) 100%);
+  
+  --tcc-shadow: 0 8px 32px rgba(231, 76, 60, 0.15);
+  --tcc-shadow-yellow: 0 8px 32px rgba(241, 196, 15, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background: var(--tcc-gradient);
+  color: var(--tcc-black);
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mat-mdc-form-field {
+  .mat-mdc-form-field-flex {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 12px !important;
+    border: 2px solid rgba(231, 76, 60, 0.2) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  &.mat-focused .mat-mdc-form-field-flex {
+    border-color: var(--tcc-red) !important;
+    box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1) !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 16px 0 !important;
+  }
+
+  .mat-mdc-form-field-label {
+    color: var(--tcc-gray) !important;
+    font-weight: 500 !important;
+  }
+
+  .mat-mdc-input-element {
+    color: var(--tcc-black) !important;
+    font-weight: 500 !important;
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    color: var(--tcc-red) !important;
+  }
+
+  .mat-mdc-form-field-error {
+    color: var(--tcc-red) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+  }
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background: var(--tcc-gradient) !important;
+  color: var(--tcc-white) !important;
+  border-radius: 12px !important;
+  padding: 12px 32px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: var(--tcc-shadow) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 40px rgba(231, 76, 60, 0.25) !important;
+  }
+
+  &:disabled {
+    background: var(--tcc-gray) !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.mat-mdc-button {
+  color: var(--tcc-red) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    color: var(--tcc-dark-red) !important;
+    transform: translateY(-1px) !important;
+  }
+}
+
+.mat-mdc-toolbar.mat-primary {
+  background: var(--tcc-gradient) !important;
+  color: var(--tcc-white) !important;
+}
+
+.mat-mdc-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: var(--tcc-shadow) !important;
+}
+
+.mat-mdc-snack-bar-container {
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #27ae60;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+
+  &.error-snackbar {
+    --mdc-snackbar-container-color: var(--tcc-red);
+    --mdc-snackbar-supporting-text-color: white;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tcc-red);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tcc-dark-red);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@media (max-width: 768px) {
+  .mat-mdc-form-field {
+    .mat-mdc-form-field-flex {
+      border-radius: 8px !important;
+    }
+  }
+
+  .mat-mdc-raised-button.mat-primary {
+    padding: 10px 24px !important;
+    font-size: 14px !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tcc-black: #ffffff;
+    --tcc-white: #2c3e50;
+  }
+}
