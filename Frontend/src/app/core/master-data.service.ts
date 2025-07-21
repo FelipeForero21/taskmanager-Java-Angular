@@ -75,41 +75,48 @@ export class MasterDataService {
 
   constructor(private http: HttpClient) {}
 
-  loadMasterData(): Observable<MasterData> {
+  loadTaskStatuses(): Observable<TaskStatus[]> {
     this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-
-    return this.http.get<MasterData>(this.apiUrl).pipe(
+    return this.http.get<TaskStatus[]>(`${this.apiUrl}/statuses`).pipe(
       tap({
-        next: (data) => {
-          this.taskStatusesSignal.set(data.taskStatuses);
-          this.taskPrioritiesSignal.set(data.taskPriorities);
-          this.categoriesSignal.set(data.categories);
+        next: statuses => {
+          this.taskStatusesSignal.set(statuses);
           this.loadingSignal.set(false);
         },
-        error: (error) => {
-          this.errorSignal.set(error.message || 'Error al cargar datos maestros');
+        error: () => {
           this.loadingSignal.set(false);
         }
       })
     );
   }
 
-  loadTaskStatuses(): Observable<TaskStatus[]> {
-    return this.http.get<TaskStatus[]>(`${this.apiUrl}/task-statuses`).pipe(
-      tap(statuses => this.taskStatusesSignal.set(statuses))
-    );
-  }
-
   loadTaskPriorities(): Observable<TaskPriority[]> {
-    return this.http.get<TaskPriority[]>(`${this.apiUrl}/task-priorities`).pipe(
-      tap(priorities => this.taskPrioritiesSignal.set(priorities))
+    this.loadingSignal.set(true);
+    return this.http.get<TaskPriority[]>(`${this.apiUrl}/priorities`).pipe(
+      tap({
+        next: priorities => {
+          this.taskPrioritiesSignal.set(priorities);
+          this.loadingSignal.set(false);
+        },
+        error: () => {
+          this.loadingSignal.set(false);
+        }
+      })
     );
   }
 
   loadCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiUrl}/categories`).pipe(
-      tap(categories => this.categoriesSignal.set(categories))
+    this.loadingSignal.set(true);
+    return this.http.get<Category[]>("http://localhost:8080/api/categories").pipe(
+      tap({
+        next: categories => {
+          this.categoriesSignal.set(categories);
+          this.loadingSignal.set(false);
+        },
+        error: () => {
+          this.loadingSignal.set(false);
+        }
+      })
     );
   }
 

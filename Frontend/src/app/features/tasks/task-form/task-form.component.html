@@ -1,1 +1,73 @@
-<p>task-form works!</p>
+<div class="task-form-container">
+  <mat-card class="form-card">
+    <mat-card-title class="form-title">
+      <mat-icon class="title-icon">add_circle</mat-icon>
+      {{ isEditMode() ? 'Editar Tarea' : 'Nueva Tarea' }}
+    </mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Título *</mat-label>
+          <input matInput formControlName="title" maxlength="200" placeholder="Título de la tarea">
+          <mat-error *ngIf="isFieldInvalid('title')">{{ getFieldError('title') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="description" maxlength="1000" rows="3" placeholder="Descripción de la tarea"></textarea>
+          <mat-error *ngIf="isFieldInvalid('description')">{{ getFieldError('description') }}</mat-error>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Estado *</mat-label>
+            <mat-select formControlName="statusId">
+              <mat-option *ngFor="let status of taskStatuses()" [value]="status.taskStatusId">
+                {{ status.statusName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="isFieldInvalid('statusId')">{{ getFieldError('statusId') }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Prioridad *</mat-label>
+            <mat-select formControlName="priorityId">
+              <mat-option *ngFor="let priority of taskPriorities()" [value]="priority.taskPriorityId">
+                {{ priority.priorityName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="isFieldInvalid('priorityId')">{{ getFieldError('priorityId') }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="categoryId">
+              <mat-option value="">Sin categoría</mat-option>
+              <mat-option *ngFor="let category of categories()" [value]="category.categoryId">
+                {{ category.categoryName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Fecha límite</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate" placeholder="Fecha límite">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="onClearForm()">Limpiar</button>
+          <button mat-stroked-button type="button" (click)="onCancel()">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid || loading()" class="save-btn">
+            <mat-icon>save</mat-icon>
+            {{ isEditMode() ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

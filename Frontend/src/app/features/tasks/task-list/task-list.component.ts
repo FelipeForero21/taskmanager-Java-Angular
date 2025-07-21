@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -11,9 +11,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { TaskService, Task } from '../../../core/task.service';
-import { MasterDataService } from '../../../core/master-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TaskService, TaskResponse, TaskFilters, PageResponse } from '../../../core/task.service';
+import { MasterDataService, TaskStatus, TaskPriority, Category } from '../../../core/master-data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeleteDialog } from '../task-detail/task-detail.component';
 
 @Component({
   selector: 'app-task-list',
@@ -31,6 +35,7 @@ import { MasterDataService } from '../../../core/master-data.service';
     MatInputModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
     ReactiveFormsModule
   ],
   templateUrl: './task-list.component.html',
@@ -38,107 +43,148 @@ import { MasterDataService } from '../../../core/master-data.service';
 })
 export class TaskListComponent implements OnInit {
   filterForm: FormGroup;
+  displayedColumns = ['title', 'status', 'priority', 'category', 'dueDate', 'assignedTo', 'actions'];
+
+  // Signals para paginación y filtros
+  tasks = this.taskService.tasks;
+  loading = this.taskService.loading;
+  error = this.taskService.error;
+  totalElements = this.taskService.totalElements;
+  page = this.taskService.page;
+  pageSize = this.taskService.pageSize;
+
+  taskStatuses = this.masterDataService.sortedTaskStatuses;
+  taskPriorities = this.masterDataService.sortedTaskPriorities;
+  categories = this.masterDataService.activeCategories;
 
   constructor(
     private taskService: TaskService,
     private masterDataService: MasterDataService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.filterForm = this.fb.group({
-      search: [''],
-      status: [''],
-      priority: [''],
-      category: ['']
+      searchTerm: [''],
+      statusId: [''],
+      priorityId: [''],
+      categoryId: ['']
     });
   }
 
   ngOnInit(): void {
-    this.loadData();
-    this.setupFilterListener();
-  }
-
-  loadData(): void {
-    this.taskService.loadTasks().subscribe();
-    this.masterDataService.loadMasterData().subscribe();
-  }
-
-  setupFilterListener(): void {
-    this.filterForm.valueChanges.subscribe(filters => {
-      console.log('Filtros aplicados:', filters);
+    this.masterDataService.loadTaskStatuses().subscribe();
+    this.masterDataService.loadTaskPriorities().subscribe();
+    this.masterDataService.loadCategories().subscribe();
+    this.loadTasks();
+    this.filterForm.valueChanges.subscribe(() => {
+      this.onFilterChange();
     });
   }
 
-  get tasks() {
-    return this.taskService.tasks();
+  loadTasks(page: number = 0, size: number = 10): void {
+    const filters: TaskFilters = {
+      ...this.filterForm.value,
+      page,
+      size
+    };
+    this.taskService.loadTasks(filters).subscribe();
   }
 
-  get loading() {
-    return this.taskService.loading();
+  onPageChange(event: PageEvent): void {
+    this.loadTasks(event.pageIndex, event.pageSize);
   }
 
-  get error() {
-    return this.taskService.error();
+  onFilterChange(): void {
+    this.loadTasks(0, this.pageSize());
   }
 
-  get taskStatuses() {
-    return this.masterDataService.sortedTaskStatuses();
-  }
-
-  get taskPriorities() {
-    return this.masterDataService.sortedTaskPriorities();
-  }
-
-  get categories() {
-    return this.masterDataService.activeCategories();
-  }
-
-  createTask(): void {
+  onCreateTask(): void {
     this.router.navigate(['/tasks/create']);
   }
 
-  editTask(taskId: string): void {
-    this.router.navigate(['/tasks/edit', taskId]);
+  onViewTask(task: TaskResponse): void {
+    this.router.navigate(['/tasks', task.taskId]);
   }
 
-  deleteTask(taskId: string): void {
-    if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-      this.taskService.deleteTask(taskId).subscribe();
-    }
+  onEditTask(task: TaskResponse): void {
+    this.router.navigate(['/tasks', 'edit', task.taskId]);
   }
 
-  getPriorityColor(priority: string): string {
-    switch (priority.toLowerCase()) {
-      case 'alta': return 'warn';
-      case 'media': return 'accent';
-      case 'baja': return 'primary';
-      default: return 'primary';
-    }
+  onDeleteTask(task: TaskResponse): void {
+    const dialogRef = this.dialog.open(ConfirmDeleteDialog, {
+      width: '400px',
+      data: { taskTitle: task.title }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.taskService.deleteTask(task.taskId).subscribe({
+          next: () => this.showSuccess('Tarea eliminada exitosamente'),
+          error: () => this.showError('Error al eliminar tarea')
+        });
+      }
+    });
+  }
+
+  onClearFilters(): void {
+    this.filterForm.reset();
+    this.loadTasks(0, this.pageSize());
   }
 
   getStatusColor(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'completada': return 'primary';
-      case 'en progreso': return 'accent';
-      case 'pendiente': return 'warn';
-      default: return 'primary';
-    }
+    const statusObj = this.taskStatuses().find(s => s.statusName === status);
+    return statusObj?.colorHex || '#666666';
   }
 
-  isOverdue(task: Task): boolean {
-    if (!task.dueDate || task.taskStatus.statusName === 'Completada') return false;
-    return new Date(task.dueDate) < new Date();
+  getPriorityColor(priority: string): string {
+    const priorityObj = this.taskPriorities().find(p => p.priorityName === priority);
+    return priorityObj?.colorHex || '#666666';
   }
 
-  getDaysUntilDue(task: Task): number {
-    if (!task.dueDate) return 0;
-    const dueDate = new Date(task.dueDate);
-    const today = new Date();
-    const diffTime = dueDate.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  getCategoryColor(category: string): string {
+    const categoryObj = this.categories().find(c => c.categoryName === category);
+    return categoryObj?.colorHex || '#666666';
   }
 
-  clearFilters(): void {
-    this.filterForm.reset();
+  formatDueDate(dueDate: string): string {
+    return this.taskService.formatDueDate(dueDate);
+  }
+
+  getDaysUntilDue(dueDate: string): number {
+    return this.taskService.getDaysUntilDue(dueDate);
+  }
+
+  isOverdue(dueDate: string): boolean {
+    return this.taskService.isOverdue(dueDate);
+  }
+
+  isDueSoon(dueDate: string): boolean {
+    return this.taskService.isDueSoon(dueDate);
+  }
+
+  getDueDateClass(dueDate: string): string {
+    if (!dueDate) return '';
+    if (this.isOverdue(dueDate)) return 'overdue';
+    if (this.isDueSoon(dueDate)) return 'due-soon';
+    return '';
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
+    });
   }
 }

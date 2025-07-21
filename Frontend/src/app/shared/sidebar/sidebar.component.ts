@@ -46,7 +46,6 @@ export class SidebarComponent {
       title: 'Tareas',
       icon: 'assignment',
       route: '/tasks',
-      badge: '12',
       children: [
         { title: 'Todas las Tareas', route: '/tasks', icon: 'list' },
         { title: 'Mis Tareas', route: '/tasks/my', icon: 'person' },
