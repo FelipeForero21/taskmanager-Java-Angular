@@ -31,9 +31,6 @@ public class Category {
     @Column(name = "IconName", length = 50)
     private String iconName;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CreatedBy", nullable = false)
-    private User createdBy;
     
     @Column(name = "IsActive", nullable = false)
     private Boolean isActive = true;

@@ -37,6 +37,17 @@
       <mat-card class="stat-card">
         <mat-card-content>
           <div class="stat-header">
+            <mat-icon color="warn">autorenew</mat-icon>
+            <span class="stat-title">En Progreso</span>
+          </div>
+          <div class="stat-value">{{ stats?.inProgressTasks || 0 }}</div>
+          <div class="stat-description">Tareas en progreso</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
             <mat-icon color="accent">pending</mat-icon>
             <span class="stat-title">Pendientes</span>
           </div>
@@ -55,20 +66,9 @@
           <div class="stat-description">Tareas finalizadas</div>
         </mat-card-content>
       </mat-card>
+    </div>  
 
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-header">
-            <mat-icon color="warn">warning</mat-icon>
-            <span class="stat-title">Vencidas</span>
-          </div>
-          <div class="stat-value">{{ stats?.overdueTasks || 0 }}</div>
-          <div class="stat-description">Tareas fuera de plazo</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="charts-row">
+    <div class="charts-row-flex">
       <div class="status-chart-section">
         <mat-card>
           <mat-card-header>
@@ -85,56 +85,24 @@
           </mat-card-content>
         </mat-card>
       </div>
-    </div>
-
-    <div class="tasks-section">
-      <div class="tasks-column">
+      <div class="recent-tasks-section">
         <mat-card>
           <mat-card-header>
-            <mat-card-title>Tareas Recientes</mat-card-title>
-            <mat-card-subtitle>Últimas tareas actualizadas</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <mat-list> 
-              <mat-list-item
-                *ngFor="let task of recentTasks"
-                class="task-item"
-                (click)="onViewTask(task)"
-                style="cursor:pointer"
-              >
-                <mat-icon matListItemIcon [style.color]="task.taskStatus?.colorHex || '#666'">assignment</mat-icon>
-                <div matListItemTitle>{{ task.title }}</div>
-              </mat-list-item>
-              <mat-list-item *ngIf="recentTasks.length === 0">
-                <div matListItemTitle>No hay tareas recientes</div>
-              </mat-list-item>
-            </mat-list>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
-      <div class="tasks-column">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Próximas Tareas</mat-card-title>
-            <mat-card-subtitle>Tareas que vencen pronto</mat-card-subtitle>
+            <mat-card-title class="titulo-estado">Últimas tareas agregadas</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <mat-list>
               <mat-list-item
-                *ngFor="let task of upcomingTasks"
+                *ngFor="let task of recentTasks()"
                 class="task-item"
                 (click)="onViewTask(task)"
                 style="cursor:pointer"
               >
-                <mat-icon matListItemIcon [style.color]="task.taskPriority?.colorHex || '#666'">schedule</mat-icon>
+                <mat-icon matListItemIcon [style.color]="task.status?.colorHex || '#666'">assignment</mat-icon>
                 <div matListItemTitle>{{ task.title }}</div>
-                <div matListItemLine>
-                  <span class="due-date">{{ task.dueDate | date:'shortDate' }}</span>
-                </div>
               </mat-list-item>
-              <mat-list-item *ngIf="upcomingTasks.length === 0">
-                <div matListItemTitle>No hay tareas próximas</div>
+              <mat-list-item *ngIf="recentTasks().length === 0">
+                <div matListItemTitle>No hay tareas recientes</div>
               </mat-list-item>
             </mat-list>
           </mat-card-content>

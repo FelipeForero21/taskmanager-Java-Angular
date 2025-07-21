@@ -5,6 +5,7 @@ import { Observable, tap } from 'rxjs';
 export interface DashboardStats {
   totalTasks: number;
   pendingTasks: number;
+  inProgressTasks: number;
   completedTasks: number;
   overdueTasks: number;
 }
@@ -81,9 +82,5 @@ export class DashboardService {
 
   getStatusDistribution(): Observable<{ [status: string]: number }> {
     return this.http.get<{ [status: string]: number }>(`${this.apiUrl}/stats/status-distribution`);
-  }
-
-  getPriorityDistribution(): Observable<{ [priority: string]: number }> {
-    return this.http.get<{ [priority: string]: number }>(`${this.apiUrl}/stats/priority-distribution`);
   }
 }

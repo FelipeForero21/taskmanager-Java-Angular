@@ -65,12 +65,6 @@ export class HeaderComponent {
     });
   }
 
-  openNotifications(): void {
-    this.snackBar.open('Funcionalidad de notificaciones en desarrollo', 'Cerrar', {
-      duration: 2000
-    });
-  }
-
   openUserMenu(): void {
   }
 }

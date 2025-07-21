@@ -5,7 +5,6 @@
     </button>
     
     <div class="app-title">
-      <mat-icon class="app-icon">task_alt</mat-icon>
       <span class="app-name">Prueba Técnica - Sistema de Gestión de Tareas con IA - TCC | Felipe Forero</span>
     </div>
   </div>
@@ -14,9 +13,6 @@
   </div>
 
   <div class="toolbar-right">
-    <button mat-icon-button (click)="openNotifications()" class="notification-btn">
-      <mat-icon [matBadge]="3" matBadgeColor="warn">notifications</mat-icon>
-    </button>
 
     <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
       <div class="user-info">
@@ -41,18 +37,6 @@
           </div>
         </div>
       </div>
-      
-      <mat-divider></mat-divider>
-      
-      <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon>
-        <span>Mi Perfil</span>
-      </button>
-      
-      <button mat-menu-item routerLink="/settings">
-        <mat-icon>settings</mat-icon>
-        <span>Configuración</span>
-      </button>
       
       <mat-divider></mat-divider>
       

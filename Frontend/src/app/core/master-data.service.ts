@@ -148,13 +148,7 @@ export class MasterDataService {
     );
   }
 
-  createCategory(category: Omit<Category, 'categoryId'>): Observable<Category> {
-    return this.http.post<Category>(`${this.apiUrl}/categories`, category).pipe(
-      tap(newCategory => {
-        this.categoriesSignal.update(categories => [...categories, newCategory]);
-      })
-    );
-  }
+
 
   clearError(): void {
     this.errorSignal.set(null);

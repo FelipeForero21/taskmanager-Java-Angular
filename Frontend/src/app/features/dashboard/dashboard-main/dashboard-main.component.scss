@@ -167,11 +167,41 @@
   justify-content: center;
 }
 
+.charts-row-flex {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.status-chart-section {
+  flex: 1 1 350px;
+  min-width: 320px;
+  max-width: 500px;
+}
+
+.recent-tasks-section {
+  flex: 1 1 350px;
+  min-width: 320px;
+  max-width: 500px;
+}
+
 @media (max-width: 900px) {
   .charts-row {
     flex-direction: column;
     align-items: center;
     gap: 16px;
+  }
+  .charts-row-flex {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .status-chart-section, .recent-tasks-section {
+    max-width: 100%;
+    min-width: 0;
   }
 }
 

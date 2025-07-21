@@ -55,22 +55,13 @@ export class SidebarComponent implements OnInit {
         { title: 'Crear Tarea', route: '/tasks/create', icon: 'add' }
       ]
     },
-    {
-      title: 'Reportes',
-      icon: 'analytics',
-      route: '/reports',
-      badge: null,
-      children: [
-        { title: 'Informe', route: '/reports/productivity', icon: 'picture_as_pdf' },
-      ]
-    }
+  
   ];
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.checkScreenSize();
-    // Cerrar automáticamente en móvil al navegar
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd && this.isMobile && this.opened) {
         this.closeSidebar.emit();

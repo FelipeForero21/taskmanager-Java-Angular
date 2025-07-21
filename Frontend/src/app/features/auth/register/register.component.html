@@ -12,7 +12,7 @@
       <div class="form-row">
         <mat-form-field appearance="outline" class="half-width">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="firstName" placeholder="nombre">
+          <input matInput formControlName="firstName" placeholder="nombre" class="input-visible">
           <mat-icon matSuffix>person</mat-icon>
           <mat-error *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
             {{ getErrorMessage('firstName') }}
@@ -21,7 +21,7 @@
 
         <mat-form-field appearance="outline" class="half-width">
           <mat-label>Apellido</mat-label>
-          <input matInput formControlName="lastName" placeholder="apellido">
+          <input matInput formControlName="lastName" placeholder="apellido" class="input-visible">
           <mat-icon matSuffix>person</mat-icon>
           <mat-error *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
             {{ getErrorMessage('lastName') }}
@@ -31,7 +31,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="pipe@gmail.com">
+        <input matInput formControlName="email" type="email" placeholder="pipe@gmail.com" class="input-visible">
         <mat-icon matSuffix>email</mat-icon>
         <mat-error *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
           {{ getErrorMessage('email') }}
@@ -40,7 +40,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Teléfono (opcional)</mat-label>
-        <input matInput formControlName="phoneNumber" placeholder="3107934069">
+        <input matInput formControlName="phoneNumber" placeholder="3107934069" class="input-visible">
         <mat-icon matSuffix>phone</mat-icon>
         <mat-error *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched">
           {{ getErrorMessage('phoneNumber') }}
@@ -49,7 +49,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Contraseña</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="contraseña">
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="contraseña" class="input-visible">
         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
           <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
@@ -69,7 +69,7 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Confirmar Contraseña</mat-label>
-        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Confirma tu contraseña">
+        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Confirma tu contraseña" class="input-visible">
         <button mat-icon-button matSuffix (click)="toggleConfirmPasswordVisibility()" type="button">
           <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>

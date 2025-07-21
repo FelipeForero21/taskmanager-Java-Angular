@@ -19,6 +19,5 @@ export const routes: Routes = [
     ]
   },
   
-  // Redirección por defecto
   { path: '**', redirectTo: 'auth/login' }
 ];

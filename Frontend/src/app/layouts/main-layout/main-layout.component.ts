@@ -19,16 +19,13 @@ import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
-  sidebarOpened = signal(true);
+  sidebarOpened = signal(window.innerWidth > 768);
 
   toggleSidebar(): void {
-    console.log('toggleSidebar antes:', this.sidebarOpened());
     this.sidebarOpened.update(opened => !opened);
-    console.log('toggleSidebar después:', this.sidebarOpened());
   }
 
   onSidebarToggle(): void {
-    console.log('onSidebarToggle');
     this.toggleSidebar();
   }
 }

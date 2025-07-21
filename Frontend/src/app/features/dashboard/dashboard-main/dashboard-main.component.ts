@@ -9,9 +9,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { DashboardService } from '../../../core/dashboard.service';
-import { TaskService } from '../../../core/task.service';
+import { TaskService, TaskResponse } from '../../../core/task.service';
 import { ApexNonAxisChartSeries, ApexChart, ApexLegend, ApexTitleSubtitle } from 'ng-apexcharts';
 import { Router } from '@angular/router';
+import { computed } from '@angular/core';
 
 export type ApexOptions = {
   series: ApexNonAxisChartSeries;
@@ -27,12 +28,15 @@ export type ApexOptions = {
   styleUrls: ['./dashboard-main.component.scss']
 })
 export class DashboardMainComponent implements OnInit {
-  priorityLabels: string[] = [];
-  priorityData: number[] = [];
-  priorityChartOptions: Partial<ApexOptions> = {};
   statusLabels: string[] = [];
   statusData: number[] = [];
   statusChartOptions: Partial<ApexOptions> = {};
+  recentTasks = computed(() =>
+    [...this.taskService.tasks()]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 5)
+  );
+
   constructor(
     private dashboardService: DashboardService,
     private taskService: TaskService,
@@ -41,14 +45,6 @@ export class DashboardMainComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDashboardData();
-    this.dashboardService.getPriorityDistribution().subscribe(data => {
-      this.priorityChartOptions = {
-        series: Object.values(data),
-        chart: { type: 'donut', width: 350, height: 250 },
-        labels: Object.keys(data),
-        legend: { position: 'bottom' }
-      };
-    });
     this.dashboardService.getStatusDistribution().subscribe(data => {
       this.statusChartOptions = {
         series: Object.values(data),
@@ -68,14 +64,6 @@ export class DashboardMainComponent implements OnInit {
     return this.dashboardService.stats();
   }
 
-  get recentTasks() {
-    return this.dashboardService.recentTasks();
-  }
-
-  get upcomingTasks() {
-    return this.dashboardService.upcomingTasks();
-  }
-
   get loading() {
     return this.dashboardService.loading();
   }
@@ -88,17 +76,8 @@ export class DashboardMainComponent implements OnInit {
     this.dashboardService.refreshDashboard();
   }
 
-  onViewTask(task: any) {
+  onViewTask(task: TaskResponse): void {
     this.router.navigate(['/tasks', task.taskId]);
-  }
-
-  getPriorityColor(priority: string): string {
-    switch (priority.toLowerCase()) {
-      case 'alta': return 'warn';
-      case 'media': return 'accent';
-      case 'baja': return 'primary';
-      default: return 'primary';
-    }
   }
 
   getStatusColor(status: string): string {

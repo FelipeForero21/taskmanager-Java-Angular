@@ -69,6 +69,8 @@
       filter: drop-shadow(0 2px 4px rgba(231, 76, 60, 0.3));
     }
 
+    
+
     .app-name {
       font-size: 20px;
       font-weight: 700;
@@ -155,7 +157,7 @@
       }
 
       .mat-mdc-input-element {
-        color: var(--tcc-black);
+        color: var(--tcc-white);
         font-weight: 500;
       }
 
@@ -301,6 +303,11 @@
 
 .register-card {
   animation: fadeInUp 0.6s ease-out;
+}
+
+.input-visible {
+  color: #222 !important;
+  background: #fff !important;
 }
 
 @media (max-width: 768px) {

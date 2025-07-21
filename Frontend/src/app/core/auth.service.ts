@@ -133,10 +133,10 @@ export class AuthService {
   }
 
   private handleAuthError(error: any): string {
-    if (error.error?.message) {
+    if (error.status === 500) {
+      return 'Usuario o contraseña incorrectos';
+    } else if (error.error?.message) {
       return error.error.message;
-    } else if (error.status === 401) {
-      return 'Credenciales inválidas';
     } else if (error.status === 400) {
       return 'Datos de entrada inválidos';
     } else if (error.status === 0) {

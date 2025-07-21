@@ -155,7 +155,10 @@
       }
     }
   }
-
+  .input-visible {
+    color: #222 !important;
+    background: #fff !important;
+  }  
   .form-actions {
     margin-top: 32px;
     text-align: center;
