@@ -52,19 +52,27 @@ public class TaskController {
     }
     
     @GetMapping
-    @Operation(summary = "Obtener tareas", description = "Obtiene la lista paginada de tareas del usuario")
+    @Operation(summary = "Obtener tareas", description = "Obtiene la lista paginada de tareas del usuario con filtros avanzados")
     public ResponseEntity<Page<TaskResponse>> getTasks(
-            @Parameter(description = "Número de página (0-based)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Tamaño de página") @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "Campo para ordenar") @RequestParam(defaultValue = "createdAt") String sortBy,
-            @Parameter(description = "Dirección del ordenamiento") @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(required = false) Integer statusId,
+            @RequestParam(required = false) Integer priorityId,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime endDate,
             HttpServletRequest httpRequest) {
         try {
             UUID userId = getUserIdFromRequest(httpRequest);
             Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
             Pageable pageable = PageRequest.of(page, size, sort);
-            
-            Page<TaskResponse> tasks = taskService.getUserTasks(userId, pageable);
+
+            Page<TaskResponse> tasks = taskService.filterTasksAdvanced(
+                userId, statusId, priorityId, categoryId, searchTerm, startDate, endDate, pageable
+            );
             return ResponseEntity.ok(tasks);
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener tareas: " + e.getMessage());

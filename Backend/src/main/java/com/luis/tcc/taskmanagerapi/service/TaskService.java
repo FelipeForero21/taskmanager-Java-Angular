@@ -181,6 +181,12 @@ public class TaskService {
         return tasks.map(this::convertToResponse);
     }
     
+    public Page<TaskResponse> filterTasksAdvanced(UUID userId, Integer statusId, Integer priorityId, Integer categoryId,
+                                                 String searchTerm, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        Page<Task> tasks = taskRepository.findByAllFilters(userId, statusId, priorityId, categoryId, searchTerm, startDate, endDate, pageable);
+        return tasks.map(this::convertToResponse);
+    }
+    
     //DASHBOARD
     
     public List<TaskResponse> getUpcomingTasks(UUID userId) {

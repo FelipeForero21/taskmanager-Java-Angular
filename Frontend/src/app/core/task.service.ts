@@ -67,6 +67,8 @@ export interface TaskFilters {
   size?: number;
   sortBy?: string;
   sortDir?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface PageResponse<T> {
@@ -120,6 +122,8 @@ export class TaskService {
     if (mergedFilters.priorityId) params = params.set('priorityId', mergedFilters.priorityId.toString());
     if (mergedFilters.categoryId) params = params.set('categoryId', mergedFilters.categoryId.toString());
     if (mergedFilters.searchTerm) params = params.set('searchTerm', mergedFilters.searchTerm);
+    if (mergedFilters.startDate) params = params.set('startDate', mergedFilters.startDate);
+    if (mergedFilters.endDate) params = params.set('endDate', mergedFilters.endDate);
     return this.http.get<PageResponse<TaskResponse>>(this.apiUrl, { params }).pipe(
       tap({
         next: (response) => {
@@ -230,5 +234,9 @@ export class TaskService {
 
   clearError(): void {
     this.errorSignal.set(null);
+  }
+
+  clearFilters(): void {
+    this.filtersSignal.set({});
   }
 }
