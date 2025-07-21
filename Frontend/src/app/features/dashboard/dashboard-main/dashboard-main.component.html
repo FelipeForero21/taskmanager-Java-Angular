@@ -1,0 +1,113 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="dashboard-title">
+      <h1>Dashboard</h1>
+      <p>Resumen de tareas</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="refreshDashboard()">
+      <mat-icon>refresh</mat-icon>
+      Actualizar
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando datos del dashboard...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-button color="primary" (click)="refreshDashboard()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!loading && !error" class="dashboard-content">
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon color="primary">assignment</mat-icon>
+            <span class="stat-title">Total Tareas</span>
+          </div>
+          <div class="stat-value">{{ stats?.totalTasks || 0 }}</div>
+          <div class="stat-description">Tareas en el sistema</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon color="warn">autorenew</mat-icon>
+            <span class="stat-title">En Progreso</span>
+          </div>
+          <div class="stat-value">{{ stats?.inProgressTasks || 0 }}</div>
+          <div class="stat-description">Tareas en progreso</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon color="accent">pending</mat-icon>
+            <span class="stat-title">Pendientes</span>
+          </div>
+          <div class="stat-value">{{ stats?.pendingTasks || 0 }}</div>
+          <div class="stat-description">Tareas por completar</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon color="primary">check_circle</mat-icon>
+            <span class="stat-title">Completadas</span>
+          </div>
+          <div class="stat-value">{{ stats?.completedTasks || 0 }}</div>
+          <div class="stat-description">Tareas finalizadas</div>
+        </mat-card-content>
+      </mat-card>
+    </div>  
+
+    <div class="charts-row-flex">
+      <div class="status-chart-section">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title class="titulo-estado">Distribución por Estado</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              *ngIf="statusChartOptions.series && statusChartOptions.chart && statusChartOptions.labels && statusChartOptions.legend"
+              [series]="statusChartOptions.series"
+              [chart]="statusChartOptions.chart"
+              [labels]="statusChartOptions.labels"
+              [legend]="statusChartOptions.legend">
+            </apx-chart>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="recent-tasks-section">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title class="titulo-estado">Últimas tareas agregadas</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-list>
+              <mat-list-item
+                *ngFor="let task of recentTasks()"
+                class="task-item"
+                (click)="onViewTask(task)"
+                style="cursor:pointer"
+              >
+                <mat-icon matListItemIcon [style.color]="task.status?.colorHex || '#666'">assignment</mat-icon>
+                <div matListItemTitle>{{ task.title }}</div>
+              </mat-list-item>
+              <mat-list-item *ngIf="recentTasks().length === 0">
+                <div matListItemTitle>No hay tareas recientes</div>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

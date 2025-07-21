@@ -64,11 +64,6 @@ public class TaskService {
         return convertToResponse(savedTask);
     }
     
-    public Page<TaskResponse> getUserTasks(UUID userId, Pageable pageable) {
-        Page<Task> tasks = taskRepository.findByUserIdOrAssignedTo(userId, pageable);
-        return tasks.map(this::convertToResponse);
-    }
-    
     public TaskResponse getTaskById(UUID taskId, UUID userId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
@@ -143,108 +138,10 @@ public class TaskService {
         taskRepository.save(task);
     }
     
-    //MÉTODOS DE BÚSQUEDA Y FILTRADO
-    public Page<TaskResponse> searchTasks(UUID userId, String searchTerm, Pageable pageable) {
-        Page<Task> tasks = taskRepository.findBySearchTerm(userId, searchTerm, pageable);
+    public Page<TaskResponse> filterTasksAdvanced(UUID userId, Integer statusId, Integer priorityId, Integer categoryId,
+                                                 String searchTerm, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        Page<Task> tasks = taskRepository.findByAllFilters(userId, statusId, priorityId, categoryId, searchTerm, startDate, endDate, pageable);
         return tasks.map(this::convertToResponse);
-    }
-    
-    public Page<TaskResponse> filterTasksByStatus(UUID userId, String statusName, Pageable pageable) {
-        TaskStatus status = taskStatusRepository.findByStatusName(statusName)
-                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
-        
-        Page<Task> tasks = taskRepository.findByStatus(userId, status, pageable);
-        return tasks.map(this::convertToResponse);
-    }
-    
-    public Page<TaskResponse> filterTasksByPriority(UUID userId, String priorityName, Pageable pageable) {
-        TaskPriority priority = taskPriorityRepository.findByPriorityName(priorityName)
-                .orElseThrow(() -> new RuntimeException("Prioridad no encontrada"));
-        
-        Page<Task> tasks = taskRepository.findByPriority(userId, priority, pageable);
-        return tasks.map(this::convertToResponse);
-    }
-    
-    public Page<TaskResponse> filterTasksByCategory(UUID userId, Integer categoryId, Pageable pageable) {
-        Page<Task> tasks = taskRepository.findByCategory(userId, categoryId, pageable);
-        return tasks.map(this::convertToResponse);
-    }
-    
-    public List<TaskResponse> filterTasksByDateRange(UUID userId, LocalDateTime startDate, LocalDateTime endDate) {
-        List<Task> tasks = taskRepository.findByDueDateBetween(userId, startDate, endDate);
-        return tasks.stream().map(this::convertToResponse).collect(Collectors.toList());
-    }
-    
-    public Page<TaskResponse> filterTasksByMultipleCriteria(UUID userId, Integer statusId, Integer priorityId, 
-                                                           Integer categoryId, String searchTerm, Pageable pageable) {
-        Page<Task> tasks = taskRepository.findByMultipleCriteria(userId, statusId, priorityId, categoryId, searchTerm, pageable);
-        return tasks.map(this::convertToResponse);
-    }
-    
-    //DASHBOARD
-    
-    public List<TaskResponse> getUpcomingTasks(UUID userId) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nextWeek = now.plusDays(7);
-        
-        List<Task> tasks = taskRepository.findUpcomingTasks(userId, now, nextWeek);
-        return tasks.stream().map(this::convertToResponse).collect(Collectors.toList());
-    }
-    
-    public List<TaskResponse> getOverdueTasks(UUID userId) {
-        LocalDateTime now = LocalDateTime.now();
-        List<Task> tasks = taskRepository.findOverdueTasks(userId, now);
-        return tasks.stream().map(this::convertToResponse).collect(Collectors.toList());
-    }
-    
-    public List<TaskResponse> getRecentTasks(UUID userId, int limit) {
-        Pageable pageable = PageRequest.of(0, limit);
-        List<Task> tasks = taskRepository.findRecentTasks(userId, pageable);
-        return tasks.stream().map(this::convertToResponse).collect(Collectors.toList());
-    }
-    
-    //MÉTODOS DE ASIGNACIÓN
-    
-    @Transactional
-    public TaskResponse assignTask(UUID taskId, UUID assigneeId, UUID userId) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
-        
-        // Verificar que el usuario tenga permisos para asignar
-        if (!task.getCreatedBy().getUserId().equals(userId)) {
-            throw new RuntimeException("No tienes permisos para asignar esta tarea");
-        }
-        
-        User assignee = userRepository.findById(assigneeId)
-                .orElseThrow(() -> new RuntimeException("Usuario asignado no encontrado"));
-        
-        task.setAssignedTo(assignee);
-        Task updatedTask = taskRepository.save(task);
-        
-        return convertToResponse(updatedTask);
-    }
-    
-    //MÉTODOS DE ESTADÍSTICAS
-    
-    public long getTaskCountByStatus(UUID userId, String statusName) {
-        return taskRepository.countByStatus(userId, statusName);
-    }
-    
-    public long getTaskCountByPriority(UUID userId, Integer priorityLevel) {
-        return taskRepository.countByPriorityLevel(userId, priorityLevel);
-    }
-    
-    public long getTotalTasks(UUID userId) {
-        return taskRepository.countTotalTasks(userId);
-    }
-    
-    public long getCompletedTasksLastMonth(UUID userId) {
-        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        return taskRepository.countCompletedTasksLastMonth(userId, lastMonth);
-    }
-    
-    public Object[] getHoursSummary(UUID userId) {
-        return taskRepository.getHoursSummary(userId);
     }
     
     //MÉTODOS AUXILIARES

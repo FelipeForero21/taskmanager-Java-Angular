@@ -115,34 +115,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmailAndIsActiveTrue(email);
     }
     
-    @Transactional
-    public User updateUserProfile(UUID userId, String firstName, String lastName, String phoneNumber) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPhoneNumber(phoneNumber);
-        
-        return userRepository.save(user);
-    }
-    
-    @Transactional
-    public void changePassword(UUID userId, String currentPassword, String newPassword) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
-        // Verificar contraseña actual
-        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
-            throw new RuntimeException("Contraseña actual incorrecta");
-        }
-        
-        // Actualizar contraseña
-        user.setPasswordHash(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-        
-    }
-    
     private void createUserSession(User user, String token) {
         String tokenHash = passwordEncoder.encode(token);
         LocalDateTime expiresAt = LocalDateTime.now().plusHours(24); // 24 horas

@@ -545,20 +545,7 @@
 					},
 					"response": []
 				},
-				{
-					"name": "Métricas de Productividad",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwtToken}}"
-							}
-						],
-						"url": "{{baseUrl}}/api/dashboard/productivity"
-					},
-					"response": []
-				},
+			
 				{
 					"name": "Progreso Semanal",
 					"request": {
@@ -612,20 +599,6 @@
 							}
 						],
 						"url": "{{baseUrl}}/api/dashboard/stats/status-distribution"
-					},
-					"response": []
-				},
-				{
-					"name": "Distribución por Prioridad",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwtToken}}"
-							}
-						],
-						"url": "{{baseUrl}}/api/dashboard/stats/priority-distribution"
 					},
 					"response": []
 				},

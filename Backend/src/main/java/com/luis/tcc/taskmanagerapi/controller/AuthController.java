@@ -88,44 +88,6 @@ public class AuthController {
         }
     }
     
-    @PutMapping("/profile")
-    @Operation(summary = "Actualizar perfil", description = "Actualiza la información del perfil del usuario")
-
-    public ResponseEntity<Map<String, Object>> updateProfile(
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam(required = false) String phoneNumber,
-            HttpServletRequest request) {
-        try {
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Perfil actualizado exitosamente");
-            response.put("firstName", firstName);
-            response.put("lastName", lastName);
-            response.put("phoneNumber", phoneNumber);
-            
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar perfil: " + e.getMessage());
-        }
-    }
-    
-    @PostMapping("/change-password")
-    @Operation(summary = "Cambiar contraseña", description = "Cambia la contraseña del usuario")
-
-    public ResponseEntity<Map<String, String>> changePassword(
-            @RequestParam String currentPassword,
-            @RequestParam String newPassword,
-            HttpServletRequest request) {
-        try {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Contraseña cambiada exitosamente");
-            
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al cambiar contraseña: " + e.getMessage());
-        }
-    }
-    
     private String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {

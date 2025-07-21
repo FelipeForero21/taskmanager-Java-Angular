@@ -1,0 +1,157 @@
+<div class="task-list-container">
+  <div class="task-list-header">
+    <div class="header-left">
+      <h1>Gestión de Tareas</h1>
+      <p>Administra y organiza tus tareas</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="onCreateTask()">
+      <mat-icon>add</mat-icon>
+      Nueva Tarea
+    </button>
+  </div>
+
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <form [formGroup]="filterForm" class="filters-form">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar tareas</mat-label>
+          <input matInput formControlName="searchTerm" placeholder="Buscar por título, descripción...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="statusId">
+            <mat-option value="">Todos los estados</mat-option>
+            <mat-option *ngFor="let status of taskStatuses()" [value]="status.taskStatusId">
+              {{ status.statusName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Prioridad</mat-label>
+          <mat-select formControlName="priorityId">
+            <mat-option value="">Todas las prioridades</mat-option>
+            <mat-option *ngFor="let priority of taskPriorities()" [value]="priority.taskPriorityId">
+              {{ priority.priorityName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="categoryId">
+            <mat-option value="">Todas las categorías</mat-option>
+            <mat-option *ngFor="let category of categories()" [value]="category.categoryId">
+              {{ category.categoryName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Fecha límite desde</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate" placeholder="Desde">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Fecha límite hasta</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate" placeholder="Hasta">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-button color="warn" (click)="onClearFilters()">
+          <mat-icon>clear</mat-icon>
+          Limpiar
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="loading()" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando tareas...</p>
+  </div>
+
+  <div *ngIf="error()" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ error() }}</p>
+    <button mat-button color="primary" (click)="loadTasks()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!loading() && !error()" class="tasks-grid">
+    <mat-card *ngFor="let task of tasks()" class="task-card" [class.overdue-row]="isOverdue(task.dueDate || '')">
+      <mat-card-header>
+        <mat-card-title class="task-title">{{ task.title }}</mat-card-title>
+        <mat-card-subtitle>
+          <span class="task-assignee" *ngIf="task.assignedTo">
+            Asignada a: {{ task.assignedTo.firstName }} {{ task.assignedTo.lastName }}
+          </span>
+          <span class="task-creator">
+            Creada por: {{ task.createdBy.firstName }} {{ task.createdBy.lastName }}
+          </span>
+        </mat-card-subtitle>
+        
+        <button mat-icon-button [matMenuTriggerFor]="taskMenu" class="task-menu-button">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        
+        <mat-menu #taskMenu="matMenu">
+          <button mat-menu-item (click)="onViewTask(task)">
+            <mat-icon>visibility</mat-icon>
+            <span>Ver</span>
+          </button>
+          <button mat-menu-item (click)="onEditTask(task)">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-menu-item (click)="onDeleteTask(task)">
+            <mat-icon>delete</mat-icon>
+            <span>Eliminar</span>
+          </button>
+        </mat-menu>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p class="task-description" *ngIf="task.description">{{ task.description }}</p>
+        
+        <div class="task-chips">
+          <mat-chip [color]="getStatusColor(task.status.statusName)" selected>
+            {{ task.status.statusName }}
+          </mat-chip>
+          <mat-chip [color]="getPriorityColor(task.priority.priorityName)" selected>
+            {{ task.priority.priorityName }}
+          </mat-chip>
+          <mat-chip *ngIf="task.category" [style.background-color]="task.category.colorHex" selected>
+            {{ task.category.categoryName }}
+          </mat-chip>
+        </div>
+
+        <div class="task-details">
+          <div class="task-detail" *ngIf="task.dueDate">
+            <mat-icon [color]="isOverdue(task.dueDate || '') ? 'warn' : 'primary'">schedule</mat-icon>
+            <span [class.overdue-text]="isOverdue(task.dueDate || '')">
+              {{ task.dueDate | date:'shortDate' }}
+              <span *ngIf="isOverdue(task.dueDate || '')" class="overdue-badge">Vencida</span>
+              <span *ngIf="!isOverdue(task.dueDate || '')" class="days-left">
+                ({{ getDaysUntilDue(task.dueDate) }} días)
+              </span>
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="tasks().length === 0" class="empty-state">
+      <mat-icon>assignment</mat-icon>
+      <h3>No hay tareas</h3>
+      <p>Comienza creando tu primera tarea</p>
+      <button mat-raised-button color="primary" (click)="onCreateTask()">
+        <mat-icon>add</mat-icon>
+        Crear Tarea
+      </button>
+    </div>
+  </div>
+</div>

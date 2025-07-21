@@ -1,0 +1,49 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <div class="toolbar-left">
+    <button mat-icon-button (click)="toggleSidebar()" class="sidebar-toggle">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <div class="app-title">
+      <span class="app-name">Prueba Técnica - Sistema de Gestión de Tareas con IA - TCC | Felipe Forero</span>
+    </div>
+  </div>
+
+  <div class="toolbar-center">
+  </div>
+
+  <div class="toolbar-right">
+
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
+      <div class="user-info">
+        <div class="user-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ getUserName() }}</span>
+          <span class="user-email">{{ getUserEmail() }}</span>
+        </div>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </div>
+    </button>
+
+    <mat-menu #userMenu="matMenu" class="user-menu">
+      <div class="menu-header">
+        <div class="menu-user-info">
+          <mat-icon class="menu-avatar">account_circle</mat-icon>
+          <div class="menu-user-details">
+            <span class="menu-user-name">{{ getUserName() }}</span>
+            <span class="menu-user-email">{{ getUserEmail() }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,167 @@
+<div class="task-detail-container">
+  <div *ngIf="loading()" class="loading-overlay">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Cargando tarea...</p>
+  </div>
+
+  <div *ngIf="error() && !loading()" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h3>Error al cargar la tarea</h3>
+    <p>{{ error() }}</p>
+    <button mat-raised-button color="primary" (click)="onBackToList()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a la lista
+    </button>
+  </div>
+
+  <div *ngIf="task() && !loading()" class="task-detail-content">
+    <div class="detail-header">
+      <div class="header-content">
+        <div class="header-left">
+          <button mat-stroked-button (click)="onBackToList()" class="back-btn">
+            <mat-icon>arrow_back</mat-icon>
+            Volver
+          </button>
+          <h1 class="page-title">
+            <mat-icon class="title-icon">assignment</mat-icon>
+            Detalle de Tarea
+          </h1>
+        </div>
+        <div class="header-actions">
+          <button mat-stroked-button (click)="onEditTask()" class="edit-btn">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+          <button mat-raised-button color="warn" (click)="onDeleteTask()" class="delete-btn">
+            <mat-icon>delete</mat-icon>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-info-grid">
+      <mat-card class="main-task-card">
+        <mat-card-header>
+          <mat-card-title class="task-title">
+            {{ task()?.title }}
+          </mat-card-title>
+          <mat-card-subtitle class="task-subtitle">
+            Creada el {{ formatDueDate(task()?.createdAt || '') }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="task()?.description" class="description-section">
+            <h3 class="section-title">
+              <mat-icon>description</mat-icon>
+              Descripción
+            </h3>
+            <p class="task-description">{{ task()?.description }}</p>
+          </div>
+          <div class="task-metadata">
+            <div class="metadata-row">
+              <div class="metadata-item">
+                <span class="metadata-label">Estado:</span>
+                <mat-chip [style.background-color]="getStatusColor(task()?.status?.statusName || '')" class="status-chip">
+                  {{ task()?.status?.statusName }}
+                </mat-chip>
+              </div>
+              <div class="metadata-item">
+                <span class="metadata-label">Prioridad:</span>
+                <mat-chip [style.background-color]="getPriorityColor(task()?.priority?.priorityName || '')" class="priority-chip">
+                  {{ task()?.priority?.priorityName }}
+                </mat-chip>
+              </div>
+            </div>
+            <div class="metadata-row" *ngIf="task()?.category">
+              <div class="metadata-item">
+                <span class="metadata-label">Categoría:</span>
+                <mat-chip [style.background-color]="getCategoryColor(task()?.category?.categoryName || '')" class="category-chip">
+                  <mat-icon *ngIf="task()?.category?.iconName" class="chip-icon">
+                    {{ task()?.category?.iconName }}
+                  </mat-icon>
+                  {{ task()?.category?.categoryName }}
+                </mat-chip>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="due-date-card" *ngIf="task()?.dueDate">
+        <mat-card-header>
+          <mat-card-title class="card-title">
+            <mat-icon [ngClass]="getDueDateClass(task()?.dueDate || '')">event</mat-icon>
+            Fecha de Vencimiento
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="due-date-info" [ngClass]="getDueDateClass(task()?.dueDate || '')">
+            <div class="due-date-text">
+              <span class="date">{{ formatDueDate(task()?.dueDate || '') }}</span>
+              <span class="status-text" *ngIf="isOverdue(task()?.dueDate || '')">Vencida</span>
+              <span class="status-text" *ngIf="isDueSoon(task()?.dueDate || '') && !isOverdue(task()?.dueDate || '')">Próxima</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="assignment-card">
+        <mat-card-header>
+          <mat-card-title class="card-title">
+            <mat-icon>person</mat-icon>
+            Asignación
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="assignment-info">
+            <div class="assigned-user" *ngIf="task()?.assignedTo">
+              <mat-icon class="user-icon">person</mat-icon>
+              <div class="user-details">
+                <span class="user-name">
+                  {{ task()?.assignedTo?.firstName }} {{ task()?.assignedTo?.lastName }}
+                </span>
+                <span class="user-email">{{ task()?.assignedTo?.email }}</span>
+              </div>
+            </div>
+            <div class="no-assignment" *ngIf="!task()?.assignedTo">
+              <mat-icon class="no-assignment-icon">person_off</mat-icon>
+              <span>Sin asignar</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="creation-info-card">
+        <mat-card-header>
+          <mat-card-title class="card-title">
+            <mat-icon>info</mat-icon>
+            Información de Creación
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="creation-info">
+            <div class="info-item">
+              <span class="info-label">Creada por:</span>
+              <span class="info-value">
+                {{ task()?.createdBy?.firstName }} {{ task()?.createdBy?.lastName }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fecha de creación:</span>
+              <span class="info-value">{{ formatDueDate(task()?.createdAt || '') }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Última actualización:</span>
+              <span class="info-value">{{ formatDueDate(task()?.updatedAt || '') }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">ID de tarea:</span>
+              <span class="info-value task-id">{{ task()?.taskId }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div> 
