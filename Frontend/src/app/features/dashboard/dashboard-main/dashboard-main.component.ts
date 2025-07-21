@@ -10,46 +10,62 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { DashboardService } from '../../../core/dashboard.service';
 import { TaskService } from '../../../core/task.service';
+import { ApexNonAxisChartSeries, ApexChart, ApexLegend, ApexTitleSubtitle } from 'ng-apexcharts';
+import { Router } from '@angular/router';
+
+export type ApexOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  legend: ApexLegend;
+  title?: ApexTitleSubtitle;
+};
 
 @Component({
   selector: 'app-dashboard-main',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatDividerModule,
-    MatListModule
-  ],
   templateUrl: './dashboard-main.component.html',
-  styleUrl: './dashboard-main.component.scss'
+  styleUrls: ['./dashboard-main.component.scss']
 })
 export class DashboardMainComponent implements OnInit {
+  priorityLabels: string[] = [];
+  priorityData: number[] = [];
+  priorityChartOptions: Partial<ApexOptions> = {};
+  statusLabels: string[] = [];
+  statusData: number[] = [];
+  statusChartOptions: Partial<ApexOptions> = {};
   constructor(
     private dashboardService: DashboardService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
+    this.dashboardService.getPriorityDistribution().subscribe(data => {
+      this.priorityChartOptions = {
+        series: Object.values(data),
+        chart: { type: 'donut', width: 350, height: 250 },
+        labels: Object.keys(data),
+        legend: { position: 'bottom' }
+      };
+    });
+    this.dashboardService.getStatusDistribution().subscribe(data => {
+      this.statusChartOptions = {
+        series: Object.values(data),
+        chart: { type: 'donut', width: 350, height: 250 },
+        labels: Object.keys(data),
+        legend: { position: 'bottom' }
+      };
+    });
   }
 
   loadDashboardData(): void {
     this.dashboardService.loadDashboardData().subscribe();
-    this.dashboardService.loadProductivityMetrics().subscribe();
     this.taskService.loadTasks().subscribe();
   }
 
   get stats() {
     return this.dashboardService.stats();
-  }
-
-  get productivityMetrics() {
-    return this.dashboardService.productivityMetrics();
   }
 
   get recentTasks() {
@@ -72,10 +88,8 @@ export class DashboardMainComponent implements OnInit {
     this.dashboardService.refreshDashboard();
   }
 
-  getCompletionRateColor(rate: number): string {
-    if (rate >= 80) return 'primary';
-    if (rate >= 60) return 'accent';
-    return 'warn';
+  onViewTask(task: any) {
+    this.router.navigate(['/tasks', task.taskId]);
   }
 
   getPriorityColor(priority: string): string {

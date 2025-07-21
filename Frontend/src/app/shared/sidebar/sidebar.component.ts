@@ -48,21 +48,8 @@ export class SidebarComponent {
       route: '/tasks',
       children: [
         { title: 'Todas las Tareas', route: '/tasks', icon: 'list' },
-        { title: 'Mis Tareas', route: '/tasks/my', icon: 'person' },
         { title: 'Crear Tarea', route: '/tasks/create', icon: 'add' }
       ]
-    },
-    {
-      title: 'Proyectos',
-      icon: 'folder',
-      route: '/projects',
-      badge: null
-    },
-    {
-      title: 'Equipo',
-      icon: 'people',
-      route: '/team',
-      badge: null
     },
     {
       title: 'Reportes',
@@ -74,12 +61,6 @@ export class SidebarComponent {
         { title: 'Tareas por Estado', route: '/reports/status', icon: 'pie_chart' },
         { title: 'Tareas por Usuario', route: '/reports/users', icon: 'person' }
       ]
-    },
-    {
-      title: 'Configuración',
-      icon: 'settings',
-      route: '/settings',
-      badge: null
     }
   ];
 

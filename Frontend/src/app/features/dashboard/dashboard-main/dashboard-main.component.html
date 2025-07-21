@@ -68,42 +68,39 @@
       </mat-card>
     </div>
 
-    <div class="productivity-section">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Productividad</mat-card-title>
-          <mat-card-subtitle>Métricas de rendimiento</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="productivity-grid">
-            <div class="productivity-item">
-              <div class="productivity-label">Tasa de Completación</div>
-              <div class="productivity-value">
-                <mat-progress-bar 
-                  [value]="stats?.completionRate || 0" 
-                  [color]="getCompletionRateColor(stats?.completionRate || 0)">
-                </mat-progress-bar>
-                <span class="progress-text">{{ stats?.completionRate || 0 }}%</span>
-              </div>
-            </div>
-
-            <div class="productivity-item">
-              <div class="productivity-label">Tareas Hoy</div>
-              <div class="productivity-value">{{ productivityMetrics?.tasksCompletedToday || 0 }}</div>
-            </div>
-
-            <div class="productivity-item">
-              <div class="productivity-label">Tareas Esta Semana</div>
-              <div class="productivity-value">{{ productivityMetrics?.tasksCompletedThisWeek || 0 }}</div>
-            </div>
-
-            <div class="productivity-item">
-              <div class="productivity-label">Promedio Diario</div>
-              <div class="productivity-value">{{ productivityMetrics?.averageTasksPerDay || 0 }}</div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <div class="charts-row">
+      <div class="priority-chart-section">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Distribución por Prioridad</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              *ngIf="priorityChartOptions.series && priorityChartOptions.chart && priorityChartOptions.labels && priorityChartOptions.legend"
+              [series]="priorityChartOptions.series"
+              [chart]="priorityChartOptions.chart"
+              [labels]="priorityChartOptions.labels"
+              [legend]="priorityChartOptions.legend">
+            </apx-chart>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="status-chart-section">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Distribución por Estado</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <apx-chart
+              *ngIf="statusChartOptions.series && statusChartOptions.chart && statusChartOptions.labels && statusChartOptions.legend"
+              [series]="statusChartOptions.series"
+              [chart]="statusChartOptions.chart"
+              [labels]="statusChartOptions.labels"
+              [legend]="statusChartOptions.legend">
+            </apx-chart>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
 
     <div class="tasks-section">
@@ -114,18 +111,15 @@
             <mat-card-subtitle>Últimas tareas actualizadas</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <mat-list>
-              <mat-list-item *ngFor="let task of recentTasks" class="task-item">
-                <mat-icon matListItemIcon [style.color]="task.taskStatus.colorHex">assignment</mat-icon>
+            <mat-list> 
+              <mat-list-item
+                *ngFor="let task of recentTasks"
+                class="task-item"
+                (click)="onViewTask(task)"
+                style="cursor:pointer"
+              >
+                <mat-icon matListItemIcon [style.color]="task.taskStatus?.colorHex || '#666'">assignment</mat-icon>
                 <div matListItemTitle>{{ task.title }}</div>
-                <div matListItemLine>
-                  <mat-chip [color]="getStatusColor(task.taskStatus.statusName)" selected>
-                    {{ task.taskStatus.statusName }}
-                  </mat-chip>
-                  <mat-chip [color]="getPriorityColor(task.taskPriority.priorityName)" selected>
-                    {{ task.taskPriority.priorityName }}
-                  </mat-chip>
-                </div>
               </mat-list-item>
               <mat-list-item *ngIf="recentTasks.length === 0">
                 <div matListItemTitle>No hay tareas recientes</div>
@@ -143,14 +137,16 @@
           </mat-card-header>
           <mat-card-content>
             <mat-list>
-              <mat-list-item *ngFor="let task of upcomingTasks" class="task-item">
-                <mat-icon matListItemIcon [style.color]="task.taskPriority.colorHex">schedule</mat-icon>
+              <mat-list-item
+                *ngFor="let task of upcomingTasks"
+                class="task-item"
+                (click)="onViewTask(task)"
+                style="cursor:pointer"
+              >
+                <mat-icon matListItemIcon [style.color]="task.taskPriority?.colorHex || '#666'">schedule</mat-icon>
                 <div matListItemTitle>{{ task.title }}</div>
                 <div matListItemLine>
                   <span class="due-date">{{ task.dueDate | date:'shortDate' }}</span>
-                  <mat-chip [color]="getPriorityColor(task.taskPriority.priorityName)" selected>
-                    {{ task.taskPriority.priorityName }}
-                  </mat-chip>
                 </div>
               </mat-list-item>
               <mat-list-item *ngIf="upcomingTasks.length === 0">

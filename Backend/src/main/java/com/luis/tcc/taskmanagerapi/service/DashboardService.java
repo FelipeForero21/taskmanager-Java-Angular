@@ -139,13 +139,20 @@ public class DashboardService {
         
         // Horas estimadas vs reales
         Object[] hoursSummary = taskRepository.getHoursSummary(userId);
-        BigDecimal estimatedHours = (BigDecimal) hoursSummary[0];
-        BigDecimal actualHours = (BigDecimal) hoursSummary[1];
-        
+        BigDecimal estimatedHours = BigDecimal.ZERO;
+        BigDecimal actualHours = BigDecimal.ZERO;
+        if (hoursSummary != null && hoursSummary.length >= 2) {
+            if (hoursSummary[0] != null) {
+                estimatedHours = new BigDecimal(hoursSummary[0].toString());
+            }
+            if (hoursSummary[1] != null) {
+                actualHours = new BigDecimal(hoursSummary[1].toString());
+            }
+        }
         metrics.put("estimatedHours", estimatedHours);
         metrics.put("actualHours", actualHours);
         
-        if (estimatedHours != null && estimatedHours.compareTo(BigDecimal.ZERO) > 0) {
+        if (estimatedHours.compareTo(BigDecimal.ZERO) > 0) {
             double efficiency = actualHours.divide(estimatedHours, 2, BigDecimal.ROUND_HALF_UP)
                     .multiply(BigDecimal.valueOf(100)).doubleValue();
             metrics.put("efficiency", efficiency);

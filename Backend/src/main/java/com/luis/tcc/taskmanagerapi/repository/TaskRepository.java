@@ -23,14 +23,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     @Query("SELECT t FROM Task t WHERE (t.createdBy.userId = :userId OR t.assignedTo.userId = :userId) AND t.isDeleted = false")
     Page<Task> findByUserIdOrAssignedTo(@Param("userId") UUID userId, Pageable pageable);
     
-    // Buscar tareas creadas por un usuario
-    @Query("SELECT t FROM Task t WHERE t.createdBy.userId = :userId AND t.isDeleted = false")
-    Page<Task> findByCreatedBy(@Param("userId") UUID userId, Pageable pageable);
-    
-    // Buscar tareas asignadas a un usuario
-    @Query("SELECT t FROM Task t WHERE t.assignedTo.userId = :userId AND t.isDeleted = false")
-    Page<Task> findByAssignedTo(@Param("userId") UUID userId, Pageable pageable);
-    
     //  MÉTODOS DE BÚSQUEDA Y FILTRADO 
     
     // Búsqueda por texto en título o descripción

@@ -545,20 +545,7 @@
 					},
 					"response": []
 				},
-				{
-					"name": "Métricas de Productividad",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwtToken}}"
-							}
-						],
-						"url": "{{baseUrl}}/api/dashboard/productivity"
-					},
-					"response": []
-				},
+			
 				{
 					"name": "Progreso Semanal",
 					"request": {
