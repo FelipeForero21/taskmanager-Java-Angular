@@ -1,9 +1,10 @@
 <mat-sidenav-container class="sidebar-container">
-  <mat-sidenav #sidenav [mode]="'side'" [opened]="opened" class="sidebar">
+  <div *ngIf="isMobile && opened" class="sidebar-backdrop" (click)="closeSidebar.emit()"></div>
+  <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="opened" class="sidebar" (closedStart)="closeSidebar.emit()">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-        <mat-icon class="logo-icon">task_alt</mat-icon>
-        <span class="logo-text">Task Manager</span>
+        <mat-icon class="logo-icon">table_chart</mat-icon>
+        <span class="logo-text">Gestor de Tareas</span>
       </div>
     </div>
 

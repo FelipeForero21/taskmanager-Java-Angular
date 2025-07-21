@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,6 +29,7 @@ import { AuthService } from '../../core/auth.service';
 })
 export class HeaderComponent {
   @Input() opened: boolean = true;
+  @Output() sidebarToggle = new EventEmitter<void>();
 
   constructor(
     private authService: AuthService,
@@ -37,6 +38,7 @@ export class HeaderComponent {
   ) {}
 
   toggleSidebar(): void {
+    this.sidebarToggle.emit();
   }
 
   getUserName(): string {

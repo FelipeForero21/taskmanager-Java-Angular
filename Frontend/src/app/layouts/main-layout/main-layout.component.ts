@@ -22,10 +22,13 @@ export class MainLayoutComponent {
   sidebarOpened = signal(true);
 
   toggleSidebar(): void {
+    console.log('toggleSidebar antes:', this.sidebarOpened());
     this.sidebarOpened.update(opened => !opened);
+    console.log('toggleSidebar después:', this.sidebarOpened());
   }
 
   onSidebarToggle(): void {
+    console.log('onSidebarToggle');
     this.toggleSidebar();
   }
 }

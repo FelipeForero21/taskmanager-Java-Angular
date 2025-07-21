@@ -69,10 +69,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     
     // CONTEO PARA ESTADÍSTICAS 
     
-    // Contar tareas por estado
-    @Query("SELECT COUNT(t) FROM Task t WHERE (t.createdBy.userId = :userId OR t.assignedTo.userId = :userId) AND t.isDeleted = false AND t.taskStatus.statusName = :statusName")
-    long countByStatus(@Param("userId") UUID userId, @Param("statusName") String statusName);
-    
     // Contar tareas por prioridad
     @Query("SELECT COUNT(t) FROM Task t WHERE (t.createdBy.userId = :userId OR t.assignedTo.userId = :userId) AND t.isDeleted = false AND t.taskPriority.priorityLevel = :priorityLevel")
     long countByPriorityLevel(@Param("userId") UUID userId, @Param("priorityLevel") Integer priorityLevel);

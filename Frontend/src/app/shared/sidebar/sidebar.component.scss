@@ -142,14 +142,27 @@
   background: #fff;
 }
 
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  z-index: 1199;
+}
+
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    max-width: 280px;
-  }
-  
-  .sidebar-container {
-    height: calc(100vh - 64px);
+    width: 80vw !important;
+    max-width: 320px !important;
+    min-width: 200px !important;
+    height: 100vh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    position: relative !important;
+    z-index: 2001 !important;
   }
 }
 

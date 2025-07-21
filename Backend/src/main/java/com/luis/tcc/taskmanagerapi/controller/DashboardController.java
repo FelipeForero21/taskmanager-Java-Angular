@@ -108,18 +108,6 @@ public class DashboardController {
         }
     }
     
-    @GetMapping("/stats/priority-distribution")
-    @Operation(summary = "Distribución por prioridad", description = "Obtiene la distribución de tareas por prioridad")
-    public ResponseEntity<Map<String, Long>> getPriorityDistribution(HttpServletRequest httpRequest) {
-        try {
-            UUID userId = getUserIdFromRequest(httpRequest);
-            Map<String, Long> distribution = dashboardService.getPriorityDistribution(userId);
-            return ResponseEntity.ok(distribution);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener distribución por prioridad: " + e.getMessage());
-        }
-    }
-    
     @GetMapping("/tasks/recent")
     @Operation(summary = "Tareas recientes", description = "Obtiene las tareas más recientes para el dashboard")
     public ResponseEntity<DashboardResponse.TaskSummary[]> getRecentTasks(HttpServletRequest httpRequest) {

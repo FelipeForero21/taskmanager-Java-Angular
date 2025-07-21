@@ -603,20 +603,6 @@
 					"response": []
 				},
 				{
-					"name": "Distribución por Prioridad",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwtToken}}"
-							}
-						],
-						"url": "{{baseUrl}}/api/dashboard/stats/priority-distribution"
-					},
-					"response": []
-				},
-				{
 					"name": "Tareas Recientes del Dashboard",
 					"request": {
 						"method": "GET",

@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ViewChild, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,8 +33,11 @@ interface MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Input() opened: boolean = true;
+  @Output() closeSidebar = new EventEmitter<void>();
+
+  isMobile: boolean = false;
 
   menuItems: MenuItem[] = [
     {
@@ -57,14 +61,32 @@ export class SidebarComponent {
       route: '/reports',
       badge: null,
       children: [
-        { title: 'Productividad', route: '/reports/productivity', icon: 'trending_up' },
-        { title: 'Tareas por Estado', route: '/reports/status', icon: 'pie_chart' },
-        { title: 'Tareas por Usuario', route: '/reports/users', icon: 'person' }
+        { title: 'Informe', route: '/reports/productivity', icon: 'picture_as_pdf' },
       ]
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.checkScreenSize();
+    // Cerrar automáticamente en móvil al navegar
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && this.isMobile && this.opened) {
+        this.closeSidebar.emit();
+      }
+    });
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+    this.cdr.detectChanges();
+  }
 
   isActive(route: string): boolean {
     return this.router.url.startsWith(route);
@@ -72,5 +94,8 @@ export class SidebarComponent {
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
+    if (this.isMobile) {
+      this.closeSidebar.emit();
+    }
   }
 }

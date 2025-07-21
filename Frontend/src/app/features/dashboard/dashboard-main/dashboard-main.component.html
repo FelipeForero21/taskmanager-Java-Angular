@@ -2,7 +2,7 @@
   <div class="dashboard-header">
     <div class="dashboard-title">
       <h1>Dashboard</h1>
-      <p>Resumen de tu productividad y tareas</p>
+      <p>Resumen de tareas</p>
     </div>
     <button mat-raised-button color="primary" (click)="refreshDashboard()">
       <mat-icon>refresh</mat-icon>
@@ -69,26 +69,10 @@
     </div>
 
     <div class="charts-row">
-      <div class="priority-chart-section">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Distribución por Prioridad</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <apx-chart
-              *ngIf="priorityChartOptions.series && priorityChartOptions.chart && priorityChartOptions.labels && priorityChartOptions.legend"
-              [series]="priorityChartOptions.series"
-              [chart]="priorityChartOptions.chart"
-              [labels]="priorityChartOptions.labels"
-              [legend]="priorityChartOptions.legend">
-            </apx-chart>
-          </mat-card-content>
-        </mat-card>
-      </div>
       <div class="status-chart-section">
         <mat-card>
           <mat-card-header>
-            <mat-card-title>Distribución por Estado</mat-card-title>
+            <mat-card-title class="titulo-estado">Distribución por Estado</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <apx-chart
